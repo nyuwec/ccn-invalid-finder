@@ -2,8 +2,8 @@ import * as fs from 'fs'
 import * as parse from 'csv-parse/lib/sync'
 
 export default function listInvalidFiles(dirname: string): {invalidFiles: string[], allFiles: string[]} {
-  let allFiles = fs.readdirSync(dirname)//.slice(0, 20)
-  let invalidFiles = allFiles
+  let allFiles = fs.readdirSync(dirname).sort()
+  let invalidFiles = allFiles//.slice(0, 20)
     .filter((filename) => {
       let path = dirname + '/' + filename
       let data = fs.readFileSync(path, 'utf8')
