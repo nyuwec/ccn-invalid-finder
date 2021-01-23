@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.DS_Store
+ccn-invalid-finder*
+package-lock.json
+CCN

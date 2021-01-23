@@ -1,0 +1,22 @@
+{
+  "name": "ccn-invalid-finder",
+  "version": "1.0.0",
+  "description": "Finds invalid files",
+  "main": "first.js",
+  "bin": "dist/bin.js",
+  "scripts": {
+    "build": "tsc",
+    "build-watch": "tsc --watch",
+    "finder": "node dist/bin.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "csv-parse": "^4.15.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.3",
+    "@types/node": "^7.0.5"
+  }
+}
