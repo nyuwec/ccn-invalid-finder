@@ -22,24 +22,33 @@ loadDataFromCSV('data/Balatonszabadi_OPC_full.csv')
     console.log(err)
   })
 
+async function loadDataFromXLSX(fileName: string): Promise<GroupedRows> {
+  return inXls.xlsx.readFile(fileName)
+    .then((wb) => {
+      let worksheet = wb.getWorksheet(1)
+      return gatherGroupedRows(worksheet)
+    })  
+}
+
 async function loadDataFromCSV(fileName: string): Promise<GroupedRows> {
   return inXls.csv.readFile(fileName)
-    .then((wb) => {
-      // let worksheet = wb.getWorksheet(1);
-      let worksheet = wb
-
-      let groupedRows: GroupedRows = new GroupedRows()
-      const lastRowNum = worksheet.actualRowCount
-      for (let i=START_ROW;i<=lastRowNum;i++) {
-        let row = getRowData(worksheet, i)
-        let row10MinGroupKey = get10MinTimeGroupKey(row.date)
-        let arr = groupedRows.getOrElse(row10MinGroupKey, new Array<RowType>())
-        arr.push(row)
-        groupedRows.set(row10MinGroupKey, arr)
-      }
-      return groupedRows
+    .then((worksheet) => {
+      return gatherGroupedRows(worksheet)
     }
   )
+}
+
+function gatherGroupedRows(worksheet: Excel.Worksheet): GroupedRows {
+  let groupedRows: GroupedRows = new GroupedRows()
+  const lastRowNum = worksheet.actualRowCount
+  for (let i=START_ROW;i<=lastRowNum;i++) {
+    let row = getRowData(worksheet, i)
+    let row10MinGroupKey = get10MinTimeGroupKey(row.date)
+    let arr = groupedRows.getOrElse(row10MinGroupKey, new Array<RowType>())
+    arr.push(row)
+    groupedRows.set(row10MinGroupKey, arr)
+  }
+  return groupedRows
 }
 
 function calculateAndWrite(groupedRows: GroupedRows): void {
