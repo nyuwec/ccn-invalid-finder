@@ -13,14 +13,16 @@ const START_ROW = 5
 
 type RowType = {date: string, vals: number[]}
 
-inXls.xlsx.readFile('data/2.xlsx')
+inXls.csv.readFile('data/Balatonszabadi_OPC_full.csv')
   .then((wb) => {
-    let worksheet = wb.getWorksheet(1);
+    // let worksheet = wb.getWorksheet(1);
+    let worksheet = wb
 
     let groupedRows = new MMap<string, Array<RowType>>()
-    for (let i=START_ROW;i<=worksheet.actualRowCount;i++) {
+    const lastRowNum = worksheet.actualRowCount
+    for (let i=START_ROW;i<=lastRowNum;i++) {
       let row = getRowData(worksheet, i)
-      let row10MinGroupKey = get10MinTimeGroupKey(row.date as string)
+      let row10MinGroupKey = get10MinTimeGroupKey(row.date)
       let arr = groupedRows.getOrElse(row10MinGroupKey, new Array<RowType>())
       arr.push(row)
       groupedRows.set(row10MinGroupKey, arr)
@@ -42,7 +44,8 @@ inXls.xlsx.readFile('data/2.xlsx')
           avgCols.set(key, arr)
         }
       }
-      let newRow = outSheet.addRow([moment.utc(key).toDate(), ...avgCols.getOrElse(key, [])])
+      let groupDateShifted = moment.utc(key).add(10, 'minutes')
+      let newRow = outSheet.addRow([groupDateShifted.toDate(), ...avgCols.getOrElse(key, [])])
       newRow.commit()
     })
 
@@ -66,7 +69,7 @@ function getRowData(worksheet: Excel.Worksheet, rowNum: number): RowType {
 }
 
 function get10MinTimeGroupKey(timeString: string): string {
-  let ts = moment.utc(timeString)
+  let ts = moment.utc(timeString, "YYYY.MM.DD hh:mm:ss")
   let min = ts.minute()
   let groupMin = Math.floor(min / 10)
   let prefix = ts.format("YYYY-MM-DDTHH")
