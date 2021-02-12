@@ -22,7 +22,7 @@ loadDataFromCSV('data/Balatonszabadi_OPC_full.csv')
     console.log(err)
   })
 
-function loadDataFromCSV(fileName: string): Promise<GroupedRows> {
+async function loadDataFromCSV(fileName: string): Promise<GroupedRows> {
   return inXls.csv.readFile(fileName)
     .then((wb) => {
       // let worksheet = wb.getWorksheet(1);
