@@ -12,48 +12,59 @@ const Cols = {
 const START_ROW = 5
 
 type RowType = {date: string, vals: number[]}
+class GroupedRows extends MMap<string, Array<RowType>> {}
 
-inXls.csv.readFile('data/Balatonszabadi_OPC_full.csv')
-  .then((wb) => {
-    // let worksheet = wb.getWorksheet(1);
-    let worksheet = wb
+loadDataFromCSV('data/Balatonszabadi_OPC_full.csv')
+  .then((groupedRows) => {
+    calculateAndWrite(groupedRows)
+  })
+  .catch((err)=> {
+    console.log(err)
+  })
 
-    let groupedRows = new MMap<string, Array<RowType>>()
-    const lastRowNum = worksheet.actualRowCount
-    for (let i=START_ROW;i<=lastRowNum;i++) {
-      let row = getRowData(worksheet, i)
-      let row10MinGroupKey = get10MinTimeGroupKey(row.date)
-      let arr = groupedRows.getOrElse(row10MinGroupKey, new Array<RowType>())
-      arr.push(row)
-      groupedRows.set(row10MinGroupKey, arr)
-    }
+function loadDataFromCSV(fileName: string): Promise<GroupedRows> {
+  return inXls.csv.readFile(fileName)
+    .then((wb) => {
+      // let worksheet = wb.getWorksheet(1);
+      let worksheet = wb
 
-    const outSheet = outXls.addWorksheet('Aggregated data');
-    let avgCols = new MMap<string, Array<number>>()
-    groupedRows.forEach((groupedRows, key) => {
-      if (groupedRows.length > 0) {
-        let colNum = groupedRows[0].vals.length
-        for (let col = 0; col < colNum; col ++) {
-          let colVals = groupedRows.map(row => row.vals[col])
-          let arr = avgCols.getOrElse(key, new Array<number>())
-          arr[col] = (
-            colVals.reduce(
-              (prev, current) => prev + current,
-              0
-            ) / colVals.length)
-          avgCols.set(key, arr)
-        }
+      let groupedRows: GroupedRows = new GroupedRows()
+      const lastRowNum = worksheet.actualRowCount
+      for (let i=START_ROW;i<=lastRowNum;i++) {
+        let row = getRowData(worksheet, i)
+        let row10MinGroupKey = get10MinTimeGroupKey(row.date)
+        let arr = groupedRows.getOrElse(row10MinGroupKey, new Array<RowType>())
+        arr.push(row)
+        groupedRows.set(row10MinGroupKey, arr)
       }
-      let groupDateShifted = moment.utc(key).add(10, 'minutes')
-      let newRow = outSheet.addRow([groupDateShifted.toDate(), ...avgCols.getOrElse(key, [])])
-      newRow.commit()
-    })
+      return groupedRows
+    }
+  )
+}
 
-    outXls.xlsx.writeFile('data/new.xlsx')
-    })
-    .catch((err)=> {
-      console.log(err)
-    })
+function calculateAndWrite(groupedRows: GroupedRows): void {
+  const outSheet = outXls.addWorksheet('Aggregated data');
+  let avgCols = new MMap<string, Array<number>>()
+  groupedRows.forEach((groupedRows, key) => {
+    if (groupedRows.length > 0) {
+      let colNum = groupedRows[0].vals.length
+      for (let col = 0; col < colNum; col ++) {
+        let colVals = groupedRows.map(row => row.vals[col])
+        let arr = avgCols.getOrElse(key, new Array<number>())
+        arr[col] = (
+          colVals.reduce(
+            (prev, current) => prev + current,
+            0
+          ) / colVals.length)
+        avgCols.set(key, arr)
+      }
+    }
+    let groupDateShifted = moment.utc(key).add(10, 'minutes')
+    let newRow = outSheet.addRow([groupDateShifted.toDate(), ...avgCols.getOrElse(key, [])])
+    newRow.commit()
+  })
+  outXls.xlsx.writeFile('data/new.xlsx')
+}
 
 function getRowData(worksheet: Excel.Worksheet, rowNum: number): RowType {
   let row = worksheet.getRow(rowNum);
