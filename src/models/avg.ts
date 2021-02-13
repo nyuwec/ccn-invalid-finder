@@ -12,16 +12,16 @@ export type DateRow = {date: moment.Moment, vals: number[]}
 
 export class GroupedRows extends MMap<string, Array<DateRow>> {
   pushFrom(row: DateRow) {
-    let row10MinGroupKey = this.get10MinTimeGroupKey(row.date)
-    let arr = this.getOrElse(row10MinGroupKey, new Array<DateRow>())
+    const row10MinGroupKey = this.get10MinTimeGroupKey(row.date)
+    const arr = this.getOrElse(row10MinGroupKey, new Array<DateRow>())
     arr.push(row)
     this.set(row10MinGroupKey, arr)
   }
 
   private get10MinTimeGroupKey(momentVal: moment.Moment): string {
-    let min = momentVal.minute()
-    let groupMin = Math.floor(min / 10)
-    let prefix = momentVal.format("YYYY-MM-DDTHH")
+    const min = momentVal.minute()
+    const groupMin = Math.floor(min / 10)
+    const prefix = momentVal.format("YYYY-MM-DDTHH")
     return `${prefix}:${groupMin}0:00.000Z`
   }
 }
@@ -54,13 +54,13 @@ function excelDate2Date(excelDate: number): moment.Moment {
 }
 
 export function calculateAvg(groupedRows: GroupedRows): AvgResults {
-  let avgCols = new AvgResults()
+  const avgCols = new AvgResults()
   groupedRows.forEach((groupedRows, key) => {
     if (groupedRows.length > 0) {
-      let colNum = groupedRows[0].vals.length
+      const colNum = groupedRows[0].vals.length
       for (let col = 0; col < colNum; col ++) {
-        let colVals = groupedRows.map(row => row.vals[col])
-        let arr = avgCols.getOrElse(key, new Array<number>())
+        const colVals = groupedRows.map(row => row.vals[col])
+        const arr = avgCols.getOrElse(key, new Array<number>())
         arr[col] = (
           colVals.reduce(
             (prev, current) => prev + current,
@@ -74,12 +74,12 @@ export function calculateAvg(groupedRows: GroupedRows): AvgResults {
 }
 
 export function writeAvgs(avgResults: AvgResults, fileName: string): void {
-  let outXls = new Excel.Workbook();
+  const outXls = new Excel.Workbook();
 
   const outSheet = outXls.addWorksheet('Aggregated data');
   avgResults.forEach((avgCols, key) => {
-    let groupDateShifted = moment.utc(key).add(10, 'minutes')
-    let newRow = outSheet.addRow([groupDateShifted.toDate(), ...avgCols])
+    const groupDateShifted = moment.utc(key).add(10, 'minutes')
+    const newRow = outSheet.addRow([groupDateShifted.toDate(), ...avgCols])
     newRow.commit()
   })
 

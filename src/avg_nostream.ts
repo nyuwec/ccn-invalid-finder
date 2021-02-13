@@ -21,7 +21,7 @@ loadDataFromCSV('data/Balatonszabadi_OPC_full.csv')
 async function loadDataFromXLSX(fileName: string): Promise<GroupedRows> {
   return new Excel.Workbook().xlsx.readFile(fileName)
     .then((wb) => {
-      let worksheet = wb.getWorksheet(1)
+      const worksheet = wb.getWorksheet(1)
       return gatherGroupedRows(worksheet)
     })
 }
@@ -36,14 +36,14 @@ async function loadDataFromCSV(fileName: string): Promise<GroupedRows> {
 
 function gatherGroupedRows(worksheet: Excel.Worksheet): GroupedRows {
   function getRowData(worksheet: Excel.Worksheet, rowNum: number): DateRow {
-    let rawRow = worksheet.getRow(rowNum);
+    const rawRow = worksheet.getRow(rowNum);
     return toDateRow(rawRow)
   }
 
   let groupedRows: GroupedRows = new GroupedRows()
   const lastRowNum = worksheet.actualRowCount
   for (let i=START_ROW;i<=lastRowNum;i++) {
-    let row = getRowData(worksheet, i)
+    const row = getRowData(worksheet, i)
     groupedRows.pushFrom(row)
   }
   return groupedRows

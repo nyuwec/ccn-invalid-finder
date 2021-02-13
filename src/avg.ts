@@ -14,10 +14,10 @@ async function loadDataFromStream(fileName: string) {
   };
   const workbookReader = new Excel.stream.xlsx.WorkbookReader(fileName, options)
   for await (const worksheetReader of workbookReader) {
-    let groupedRows: GroupedRows = new GroupedRows()
+    const groupedRows: GroupedRows = new GroupedRows()
     for await (const rawRow of worksheetReader) {
       if (rawRow.number >= START_ROW) {
-        let row = toDateRow(rawRow)
+        const row = toDateRow(rawRow)
         groupedRows.pushFrom(row)
       }
     }
