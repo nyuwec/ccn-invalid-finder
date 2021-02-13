@@ -1,6 +1,12 @@
 import * as Excel from 'exceljs'
 import { START_ROW, DateRow, GroupedRows, AvgResults, toDateRow, calculateAvg, writeAvgs } from './models/avg'
 
+/*
+These no-stream parsers are limited to heap memory.
+Use the streaming version to save memory as it does not load
+the whole file into memory, only line-by-line.
+*/
+
 loadDataFromCSV('data/Balatonszabadi_OPC_full.csv')
   .then((groupedRows) => {
     const avgResults = calculateAvg(groupedRows)
