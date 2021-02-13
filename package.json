@@ -9,6 +9,7 @@
     "build-watch": "tsc --watch",
     "finder": "node dist/bin.js",
     "avg": "node dist/avg.js",
+    "avg-nostream": "node dist/avg_nostream.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
