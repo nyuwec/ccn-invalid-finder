@@ -76,7 +76,6 @@ async function loadDataFromStream(fileName: string) {
     const avgResults = calculateAvg(groupedRows)
     writeAvgs(avgResults)
   }
-  return null
 }
 
 
