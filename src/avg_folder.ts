@@ -10,29 +10,32 @@ const BIN_LAST_COL = 71
 const PM_FIRST_COL = 41
 const PM_LAST_COL = 46
 
-loadDataFromFolder('./data_preprocessed/').then(resultedGRows => {
-  const groupedRows: GroupedRows = new GroupedRows()
-  resultedGRows.forEach(gr => {
-    groupedRows.append(gr)
-  })
-  writeGroupedRows(groupedRows, 'data_preprocessed/full.xlsx')
+loadDataFromFolder('./data_preprocessed/')
+  .then(resultedGRows => {
+    const groupedRows: GroupedRows = new GroupedRows()
+    resultedGRows.forEach(gr => {
+      groupedRows.append(gr)
+    })
+    writeGroupedRows(groupedRows, 'data_preprocessed/full.xlsx')
 
-  const avgResult = calculateAvg(groupedRows)
-  writeAvgs(avgResult, 'data_preprocessed/full_avg.xlsx')
-})
+    const avgResult = calculateAvg(groupedRows)
+    writeAvgs(avgResult, 'data_preprocessed/full_avg.xlsx')
+  })
 
 async function loadDataFromFolder(dirName: string): Promise<GroupedRows[]> {
   let allFiles: fs.Dirent[] = fs.readdirSync(dirName, {
     encoding: 'utf8',
     withFileTypes: true
-  }).sort()
+  })
 
   const all = allFiles
     .filter((dirEntity) => {
       return (dirEntity.isFile() && path.extname(dirEntity.name) == '.xlsx')
     })
-    .map((dirEntity) => {
-      const rows = readFile(dirName + dirEntity.name)
+    .map(dirEntity => dirName + dirEntity.name)
+    .sort()
+    .map(fileName => {
+      const rows = readFile(fileName)
       return rows
     })
 
@@ -49,16 +52,20 @@ async function readFile(fileName: string): Promise<GroupedRows> {
   }
   const groupedRows: GroupedRows = new GroupedRows()
 
-  console.log(`TRY TO OPEN ${fileName}`)
+  console.log(`Open ${fileName}`)
   const workbookReader = new Excel.stream.xlsx.WorkbookReader(fileName, options)
   for await (const worksheetReader of workbookReader) {
     for await (const rawRow of worksheetReader) {
-      if (rawRow.number >= START_ROW && rawRow.cellCount >= 70) {
+      if (rawRow.number >= START_ROW
+        && rawRow.cellCount >= BIN_LAST_COL
+        && rawRow.getCell(1).type != Excel.ValueType.Null
+      ) {
         const row = toDateRow(rawRow)
         groupedRows.pushFrom(row)
       }
     }
   }
+  console.log(`Finished ${fileName}`)
   return groupedRows
 }
 
@@ -86,7 +93,13 @@ function toDateRow(rawRow: Excel.Row): DateRow {
 }
 
 function writeGroupedRows(groupedRows: GroupedRows, fileName: string) {
-  const outXls = new Excel.Workbook();
+  const options = {
+    filename: fileName,
+    useStyles: false,
+    useSharedStrings: false
+  };
+
+  const outXls = new Excel.stream.xlsx.WorkbookWriter(options);
 
   const outSheet = outXls.addWorksheet('BIN + PM');
   groupedRows.forEach(rows => {
@@ -95,6 +108,6 @@ function writeGroupedRows(groupedRows: GroupedRows, fileName: string) {
       newRow.commit()
     })
   })
-
-  outXls.xlsx.writeFile(fileName)
+  outSheet.commit()
+  outXls.commit()
 }

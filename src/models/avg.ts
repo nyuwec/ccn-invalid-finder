@@ -49,7 +49,7 @@ export function toDateRow(rawRow: Excel.Row): DateRow {
 
   const vals: number[] = Array<number>()
   for (let i=Cols.DATE+1;i<=rawRow.cellCount;i++) {
-   vals.push(rawRow.getCell(i).value as number)
+    vals.push(extractValue(rawRow.getCell(i)))
   }
   return {
     date: date,
@@ -75,7 +75,7 @@ export function extractValue(cell: Excel.Cell): number {
     case Excel.ValueType.Number:
       return parseFloatFB(cell.value as string)
     default:
-      console.log(`Unknown cell.type: ${cell.type}`)
+      console.log(`Unknown cell.type: ${cell.type} val: ${cell.value}, row: ${cell.row}, col: ${cell.col}`)
       return parseFloatFB(cell.value as string)
   }
 }
@@ -105,7 +105,13 @@ export function calculateAvg(groupedRows: GroupedRows): AvgResults {
 }
 
 export function writeAvgs(avgResults: AvgResults, fileName: string): void {
-  const outXls = new Excel.Workbook();
+  const options = {
+    filename: fileName,
+    useStyles: false,
+    useSharedStrings: false
+  };
+
+  const outXls = new Excel.stream.xlsx.WorkbookWriter(options);
 
   const outSheet = outXls.addWorksheet('Aggregated data');
   avgResults.forEach((avgCols, key) => {
@@ -114,5 +120,6 @@ export function writeAvgs(avgResults: AvgResults, fileName: string): void {
     newRow.commit()
   })
 
-  outXls.xlsx.writeFile(fileName)
+  outSheet.commit()
+  outXls.commit()
 }
