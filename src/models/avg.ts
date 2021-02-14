@@ -18,6 +18,14 @@ export class GroupedRows extends MMap<string, Array<DateRow>> {
     this.set(row10MinGroupKey, arr)
   }
 
+  append(groupedRow: GroupedRows) {
+    groupedRow.forEach((dateRows, key) => {
+      dateRows.forEach(row => {
+        this.pushFrom(row)
+      })
+    })
+  }
+
   private get10MinTimeGroupKey(momentVal: moment.Moment): string {
     const min = momentVal.minute()
     const groupMin = Math.floor(min / 10)
@@ -49,7 +57,30 @@ export function toDateRow(rawRow: Excel.Row): DateRow {
   }
 }
 
-function excelDate2Date(excelDate: number): moment.Moment {
+export function extractValue(cell: Excel.Cell): number {
+  function parseFloatFB(val: string) {
+    const result = parseFloat(val)
+    if (isNaN(result)) {
+      return 0
+    }
+    return result
+  }
+
+  switch (cell.type) {
+    case Excel.ValueType.Formula:
+      const value = cell.value as Excel.CellFormulaValue
+      return parseFloatFB(value.result as string)
+    case Excel.ValueType.String:
+      return parseFloatFB(eval(cell.value as string)['result'])
+    case Excel.ValueType.Number:
+      return parseFloatFB(cell.value as string)
+    default:
+      console.log(`Unknown cell.type: ${cell.type}`)
+      return parseFloatFB(cell.value as string)
+  }
+}
+
+export function excelDate2Date(excelDate: number): moment.Moment {
   return moment.utc((excelDate - (25567 + 2))*86400*1000)
 }
 

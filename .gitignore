@@ -3,5 +3,7 @@ dist/
 .DS_Store
 ccn-invalid-finder*
 package-lock.json
-CCN
-data
+CCN/
+data/
+data_preprocessed/
+__/
