@@ -22,6 +22,6 @@ async function loadDataFromStream(fileName: string) {
       }
     }
     const avgResults = calculateAvg(groupedRows)
-    writeAvgs(avgResults, 'data/new.xlsx')
+    writeAvgs(avgResults, 'data/Balatonszabadi_OPC_full_avg10min.xlsx')
   }
 }
