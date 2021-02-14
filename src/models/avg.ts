@@ -49,7 +49,7 @@ export function toDateRow(rawRow: Excel.Row): DateRow {
 
   const vals: number[] = Array<number>()
   for (let i=Cols.DATE+1;i<=rawRow.cellCount;i++) {
-    vals.push(extractValue(rawRow.getCell(i)))
+    vals.push(extractNumber(rawRow.getCell(i)))
   }
   return {
     date: date,
@@ -57,7 +57,7 @@ export function toDateRow(rawRow: Excel.Row): DateRow {
   }
 }
 
-export function extractValue(cell: Excel.Cell): number {
+export function extractNumber(cell: Excel.Cell): number {
   function parseFloatFB(val: string) {
     const result = parseFloat(val)
     if (isNaN(result)) {

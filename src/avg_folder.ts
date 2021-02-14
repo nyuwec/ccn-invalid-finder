@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as Excel from 'exceljs'
 import * as moment from 'moment'
-import { DateRow, GroupedRows, AvgResults, excelDate2Date, calculateAvg, writeAvgs, extractValue } from './models/avg'
+import { DateRow, GroupedRows, AvgResults, excelDate2Date, calculateAvg, writeAvgs, extractNumber } from './models/avg'
 
 const START_ROW = 9
 const BIN_FIRST_COL = 47
@@ -81,10 +81,10 @@ function toDateRow(rawRow: Excel.Row): DateRow {
 
   const vals: number[] = Array<number>()
   for (let i=BIN_FIRST_COL;i<=BIN_LAST_COL;i++) {
-    vals.push(extractValue(rawRow.getCell(i)))
+    vals.push(extractNumber(rawRow.getCell(i)))
   }
   for (let i=PM_FIRST_COL;i<=PM_LAST_COL;i++) {
-    vals.push(extractValue(rawRow.getCell(i)))
+    vals.push(extractNumber(rawRow.getCell(i)))
   }
   return {
     date: date,
