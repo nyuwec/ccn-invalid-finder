@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as Excel from 'exceljs'
 import * as moment from 'moment'
-import { DateRow, GroupedRows, AvgResults, excelDate2Date, calculateAvg, writeAvgs, extractNumber } from './models/avg'
+import { DateRow, GroupedRows, AvgResults, excelDate2Date, calculateAvg, writeAvgs, extractNumber, toMoment, Cols } from './models/avg'
 
 const paramFolderName = process.argv[2]
 
@@ -81,14 +81,7 @@ async function readFile(fileName: string): Promise<GroupedRows> {
 }
 
 function toDateRow(rawRow: Excel.Row): DateRow {
-  const dateCell = rawRow.getCell(1)
-  const date: moment.Moment = function () {
-    if (dateCell.type == Excel.ValueType.Number) {
-      return excelDate2Date(dateCell.value as number)
-    } else {
-      return moment.utc(dateCell.value as string, "YYYY.MM.DD hh:mm:ss")
-    }
-  }()
+  const date: moment.Moment = toMoment(rawRow.getCell(Cols.DATE))
 
   const vals: number[] = Array<number>()
   for (let i=BIN_FIRST_COL;i<=BIN_LAST_COL;i++) {

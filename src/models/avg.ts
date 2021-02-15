@@ -38,14 +38,7 @@ export class AvgResults extends MMap<string, Array<number>> {}
 
 // EXCEL PARSING UTILITIES
 export function toDateRow(rawRow: Excel.Row): DateRow {
-  const dateCell = rawRow.getCell(Cols.DATE)
-  const date: moment.Moment = function () {
-    if (dateCell.type == Excel.ValueType.Number) {
-      return excelDate2Date(dateCell.value as number)
-    } else {
-      return moment.utc(dateCell.value as string, "YYYY.MM.DD hh:mm:ss")
-    }
-  }()
+  const date: moment.Moment = toMoment(rawRow.getCell(Cols.DATE))
 
   const vals: number[] = Array<number>()
   for (let i=Cols.DATE+1;i<=rawRow.cellCount;i++) {
@@ -54,6 +47,14 @@ export function toDateRow(rawRow: Excel.Row): DateRow {
   return {
     date: date,
     vals: vals
+  }
+}
+
+export function toMoment(dateCell: Excel.Cell): moment.Moment {
+  if (dateCell.type == Excel.ValueType.Number) {
+    return excelDate2Date(dateCell.value as number)
+  } else {
+    return moment.utc(dateCell.value as string, "YYYY.MM.DD hh:mm:ss")
   }
 }
 
