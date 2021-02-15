@@ -1,7 +1,7 @@
 node_modules/
 dist/
 .DS_Store
-ccn-invalid-finder*
+ccn-toolset*
 package-lock.json
 CCN/
 data/

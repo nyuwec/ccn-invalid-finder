@@ -31,5 +31,6 @@ npm run slice-file
 # Build binary executable
 ```
 npm i pkg -g
-pkg .
+npm run build
+pkg -t node10-macos-x64 .
 ```

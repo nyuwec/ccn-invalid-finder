@@ -1,19 +1,36 @@
-import listInvalidFiles from './finder'
+import * as avgOneFile from './avg'
+import * as avgFolder from './avg_folder'
+import * as listInvalidFiles from './finder'
+import * as sliceFile from './slice_file'
 
-let dirname = process.argv[2] /* what the user enters as first argument */
+const AvailCommands = ['avg', 'avg-folder', 'finder', 'slice-file']
 
-if (dirname == null) {
-  console.error("ERR: Please pass the directory name parameter.")
+const command = process.argv[2]
+
+if (command == null || AvailCommands.includes(command) == false) {
+  console.error("ERR: Please define the command you want to execute. Available commands:")
+  AvailCommands.forEach(cmd => console.error(`\t- ${cmd}`))
+  console.error(`EXAMPLE: ccn-toolset avg /path/to/file`)
   process.exit(9)
 }
 
-try {
-  let result = listInvalidFiles(dirname)
+const argv = [process.argv[0], process.argv[1], ...process.argv.slice(3)]
 
-  console.log(`Invalid files:`)
-  result.invalidFiles.forEach(fn => console.log(fn))
-  console.log(`invalids: ${result.invalidFiles.length}`)
-  console.log(`     all: ${result.allFiles.length}`)
-} catch (error) {
-  console.log(`ERR:`, error)
-}
+console.error(command, argv)
+
+// switch (command) {
+//   case 'avg':
+//     avgOneFile.default(argv)
+//     break
+//   case 'avg-folder':
+//     avgFolder.default(argv)
+//     break
+//   case 'finder':
+//     listInvalidFiles.default(argv)
+//     break
+//   case 'slice-file':
+//     sliceFile.default(argv)
+//     break
+//   default:
+//     console.error("Command could not be run... weird.")
+// }

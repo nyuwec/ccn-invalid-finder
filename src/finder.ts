@@ -2,7 +2,32 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as parse from 'csv-parse/lib/sync'
 
-export default function listInvalidFiles(dirname: string): {invalidFiles: string[], allFiles: string[]} {
+main(process.argv)
+
+export default function main(argv: string[]) {
+  let dirname = argv[2]
+
+  if (dirname == null) {
+    console.error("ERR: Please define all the params:")
+    console.error("\t- path to folder")
+    console.error(`EXAMPLE: ${argv[1]} /path/to/`)
+    process.exit(9)
+  }
+
+  try {
+    let result = listInvalidFiles(dirname)
+
+    console.log(`Invalid files:`)
+    result.invalidFiles.forEach(fn => console.log(fn))
+    console.log(`invalids: ${result.invalidFiles.length}`)
+    console.log(`     all: ${result.allFiles.length}`)
+  } catch (error) {
+    console.log(`ERR:`, error)
+  }
+}
+
+
+function listInvalidFiles(dirname: string): {invalidFiles: string[], allFiles: string[]} {
   let allFiles: fs.Dirent[] = fs.readdirSync(dirname, {
     encoding: 'utf8',
     withFileTypes: true

@@ -1,13 +1,13 @@
 {
-  "name": "ccn-invalid-finder",
+  "name": "ccn-toolset",
   "version": "1.0.0",
-  "description": "Finds invalid files",
+  "description": "CCN file tools",
   "main": "first.js",
   "bin": "dist/bin.js",
   "scripts": {
     "build": "tsc",
     "build-watch": "tsc --watch",
-    "finder": "node dist/bin.js",
+    "finder": "node dist/finder.js",
     "avg": "node --max-old-space-size=4096 dist/avg.js",
     "avg-folder": "node --max-old-space-size=8192 dist/avg_folder.js",
     "slice-file": "node dist/slice_file.js",
