@@ -11,6 +11,7 @@
     "avg": "node --max-old-space-size=4096 dist/avg.js",
     "avg-folder": "node --max-old-space-size=8192 dist/avg_folder.js",
     "avg-nostream": "node dist/avg_nostream.js",
+    "slice-file": "node dist/slice_file.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
