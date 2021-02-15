@@ -19,7 +19,7 @@ export class GroupedRows extends MMap<string, Array<DateRow>> {
   }
 
   append(groupedRow: GroupedRows) {
-    groupedRow.forEach((dateRows, key) => {
+    groupedRow.forEach(dateRows => {
       dateRows.forEach(row => {
         this.pushFrom(row)
       })

@@ -4,22 +4,33 @@ import * as Excel from 'exceljs'
 import * as moment from 'moment'
 import { DateRow, GroupedRows, AvgResults, excelDate2Date, calculateAvg, writeAvgs, extractNumber } from './models/avg'
 
+const paramFolderName = process.argv[2]
+
+if (paramFolderName == null) {
+  console.error("ERR: Please define all the params:")
+  console.error("\t- path to folder")
+  console.error(`EXAMPLE: ${process.argv[1]} /path/to/`)
+  process.exit(9)
+}
+
+const folderName: string = (paramFolderName + '/').replace(/\/\/$/, '/')
+
 const START_ROW = 9
 const BIN_FIRST_COL = 47
 const BIN_LAST_COL = 71
 const PM_FIRST_COL = 41
 const PM_LAST_COL = 46
 
-loadDataFromFolder('./data_preprocessed/')
+loadDataFromFolder(folderName)
   .then(resultedGRows => {
     const groupedRows: GroupedRows = new GroupedRows()
     resultedGRows.forEach(gr => {
       groupedRows.append(gr)
     })
-    writeGroupedRows(groupedRows, 'data_preprocessed/full.xlsx')
+    writeGroupedRows(groupedRows, folderName + '/full.xlsx')
 
     const avgResult = calculateAvg(groupedRows)
-    writeAvgs(avgResult, 'data_preprocessed/full_avg.xlsx')
+    writeAvgs(avgResult, folderName + '/full_avg.xlsx')
   })
 
 async function loadDataFromFolder(dirName: string): Promise<GroupedRows[]> {
