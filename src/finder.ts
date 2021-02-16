@@ -2,19 +2,18 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as parse from 'csv-parse/lib/sync'
 
-main(process.argv)
-
-export default function main(argv: string[]) {
+export default function finder(argv: string[]) {
   let dirname = argv[2]
 
   if (dirname == null) {
     console.error("ERR: Please define all the params:")
     console.error("\t- path to folder")
-    console.error(`EXAMPLE: ${argv[1]} /path/to/`)
-    process.exit(9)
+    console.error(`EXAMPLE: ./${process.env.npm_package_name} finder /path/to/`)
+    process.exit(0)
   }
 
   try {
+    console.log(`Listing files in: "${dirname}"`)
     let result = listInvalidFiles(dirname)
 
     console.log(`Invalid files:`)

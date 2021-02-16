@@ -7,10 +7,10 @@
   "scripts": {
     "build": "tsc",
     "build-watch": "tsc --watch",
-    "finder": "node dist/finder.js",
-    "avg": "node --max-old-space-size=4096 dist/avg.js",
-    "avg-folder": "node --max-old-space-size=8192 dist/avg_folder.js",
-    "slice-file": "node dist/slice_file.js",
+    "finder": "node dist/bin.js finder",
+    "avg": "node --max-old-space-size=4096 dist/bin.js avg",
+    "avg-folder": "node --max-old-space-size=8192 dist/bin.js avg-folder",
+    "slice-file": "node dist/bin.js slice-file",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

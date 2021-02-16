@@ -3,9 +3,7 @@ import * as readline from 'readline'
 import * as path from 'path'
 
 
-main(process.argv)
-
-export default function main(argv: string[]) {
+export default function sliceFile(argv: string[]) {
   const fileName = argv[2]
   const headerSize = parseInt(argv[3])
   const chunkSize = parseInt(argv[4])
@@ -17,8 +15,8 @@ export default function main(argv: string[]) {
     console.error("\t- path to file")
     console.error("\t- header size in number of lines")
     console.error("\t- size of one chunk in number of lines")
-    console.error(`EXAMPLE: ${argv[1]} /path/to/file 14 100000`)
-    process.exit(9)
+    console.error(`EXAMPLE: ./${process.env.npm_package_name} slice-file /path/to/file 14 100000`)
+    process.exit(0)
   }
 
   const readInterface = readline.createInterface({

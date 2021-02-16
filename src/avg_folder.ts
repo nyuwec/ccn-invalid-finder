@@ -4,17 +4,14 @@ import * as Excel from 'exceljs'
 import * as moment from 'moment'
 import { DateRow, GroupedRows, calculateAvg, writeAvgs, extractNumber, toMoment, Cols } from './models/avg'
 
-
-main(process.argv)
-
-export default function main(argv: string[]) {
+export default function avgFolder(argv: string[]) {
   const paramFolderName = argv[2]
 
   if (paramFolderName == null) {
     console.error("ERR: Please define all the params:")
     console.error("\t- path to folder")
-    console.error(`EXAMPLE: ${argv[1]} /path/to/`)
-    process.exit(9)
+    console.error(`EXAMPLE: ./${process.env.npm_package_name} avg-folder /path/to/`)
+    process.exit(0)
   }
 
   const folderName: string = (paramFolderName + '/').replace(/\/\/$/, '/')

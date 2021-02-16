@@ -2,17 +2,15 @@ import * as Excel from 'exceljs'
 import * as path from 'path'
 import { START_ROW, GroupedRows, toDateRow, calculateAvg, writeAvgs } from './models/avg'
 
-main(process.argv)
-
-export default function main(argv: string[]) {
+export default function avgFile(argv: string[]) {
 
   const fileName = argv[2]
 
   if (fileName == null) {
     console.error("ERR: Please define all the params:")
     console.error("\t- path to file")
-    console.error(`EXAMPLE: ${argv[1]} /path/to/file`)
-    process.exit(9)
+    console.error(`EXAMPLE: ./${process.env.npm_package_name} avg /path/to/file`)
+    process.exit(0)
   }
 
   const filePath = path.parse(fileName)
@@ -20,6 +18,7 @@ export default function main(argv: string[]) {
   loadDataFromStream(fileName)
 
   async function loadDataFromStream(fileName: string) {
+    console.log(`Opening: ${fileName}`)
     const options: Partial<Excel.stream.xlsx.WorkbookStreamReaderOptions> = {
       sharedStrings: 'ignore',
       hyperlinks: 'ignore',
@@ -36,6 +35,7 @@ export default function main(argv: string[]) {
           groupedRows.pushFrom(row)
         }
       }
+      console.log(`Finished, calculating and writing AVGs...`)
       const avgResults = calculateAvg(groupedRows)
       writeAvgs(avgResults, `${filePath.dir}/${filePath.name}_avg10min${filePath.ext}`)
     }
