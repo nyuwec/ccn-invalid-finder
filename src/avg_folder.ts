@@ -27,14 +27,18 @@ export default function main(argv: string[]) {
 
   loadDataFromFolder(folderName)
     .then(resultedGRows => {
+      const lastFolderSegment = folderName.split('/').slice(-1)
+      console.log('Merge GroupedRows...')
       const groupedRows: GroupedRows = new GroupedRows()
       resultedGRows.forEach(gr => {
         groupedRows.append(gr)
       })
-      writeGroupedRows(groupedRows, folderName + '/full.xlsx')
+      console.log('Writing out GroupedRows...')
+      writeGroupedRows(groupedRows, folderName + `/${lastFolderSegment}_full.xlsx`)
 
+      console.log('Writing out 10Min avgs...')
       const avgResult = calculateAvg(groupedRows)
-      writeAvgs(avgResult, folderName + '/full_avg.xlsx')
+      writeAvgs(avgResult, folderName + `/${lastFolderSegment}_full_10MinAVG.xlsx`)
     })
 
   async function loadDataFromFolder(dirName: string): Promise<GroupedRows[]> {
@@ -49,13 +53,20 @@ export default function main(argv: string[]) {
       })
       .map(dirEntity => dirName + dirEntity.name)
       .sort()
-      .map(fileName => {
-        const rows = readFile(fileName)
-        return rows
-      })
 
-    return Promise.all(all)
+    let result = Array<GroupedRows>()
+    for await (const r of readFiles(all)) {
+      result.push(r)
+    }
+
+    return result
   }
+
+  async function* readFiles(files: string[]) {
+    for(const file of files) {
+      yield readFile(file);
+    }
+  };
 
   async function readFile(fileName: string): Promise<GroupedRows> {
     const options: Partial<Excel.stream.xlsx.WorkbookStreamReaderOptions> = {
