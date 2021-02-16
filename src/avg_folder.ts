@@ -27,7 +27,7 @@ export default function main(argv: string[]) {
 
   loadDataFromFolder(folderName)
     .then(resultedGRows => {
-      const lastFolderSegment = folderName.split('/').slice(-1)
+      const lastFolderSegment = folderName.split('/').slice(-2, -1)
       console.log('Merge GroupedRows...')
       const groupedRows: GroupedRows = new GroupedRows()
       resultedGRows.forEach(gr => {
