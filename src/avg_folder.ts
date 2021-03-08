@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as Excel from 'exceljs'
 import * as moment from 'moment'
-import { DateRow, GroupedRows, calculateAvg, writeAvgs, extractNumber, toMoment, Cols } from './models/avg'
+import { DateRow, GroupedRows, aggregateCols, writeAvgs, extractNumber, toMoment, get10MinTimeGroupKey } from './models/aggregation'
 
 export default function avgFolder(argv: string[]) {
   const paramFolderName = argv[2]
@@ -26,7 +26,7 @@ export default function avgFolder(argv: string[]) {
     .then(resultedGRows => {
       const lastFolderSegment = folderName.split('/').slice(-2, -1)
       console.log('Merge GroupedRows...')
-      const groupedRows: GroupedRows = new GroupedRows()
+      const groupedRows: GroupedRows = new GroupedRows(get10MinTimeGroupKey)
       resultedGRows.forEach(gr => {
         groupedRows.append(gr)
       })
@@ -34,7 +34,7 @@ export default function avgFolder(argv: string[]) {
       writeGroupedRows(groupedRows, folderName + `/${lastFolderSegment}_full.xlsx`)
 
       console.log('Writing out 10Min avgs...')
-      const avgResult = calculateAvg(groupedRows)
+      const avgResult = aggregateCols(groupedRows)
       writeAvgs(avgResult, folderName + `/${lastFolderSegment}_full_10MinAVG.xlsx`)
     })
 
@@ -73,7 +73,7 @@ export default function avgFolder(argv: string[]) {
       worksheets: 'emit',
       entries: 'emit',
     }
-    const groupedRows: GroupedRows = new GroupedRows()
+    const groupedRows: GroupedRows = new GroupedRows(get10MinTimeGroupKey)
 
     console.log(`Open ${fileName}`)
     const workbookReader = new Excel.stream.xlsx.WorkbookReader(fileName, options)
@@ -93,7 +93,7 @@ export default function avgFolder(argv: string[]) {
   }
 
   function toDateRow(rawRow: Excel.Row): DateRow {
-    const date: moment.Moment = toMoment(rawRow.getCell(Cols.DATE))
+    const date: moment.Moment = toMoment(rawRow.getCell(1))
 
     const vals: number[] = Array<number>()
     for (let i=BIN_FIRST_COL;i<=BIN_LAST_COL;i++) {

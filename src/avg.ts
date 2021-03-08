@@ -1,6 +1,6 @@
 import * as Excel from 'exceljs'
 import * as path from 'path'
-import { START_ROW, GroupedRows, toDateRow, calculateAvg, writeAvgs } from './models/avg'
+import { START_ROW, GroupedRows, toDateRow, aggregateCols, writeAvgs, get10MinTimeGroupKey } from './models/aggregation'
 
 export default function avgFile(argv: string[]) {
 
@@ -28,7 +28,7 @@ export default function avgFile(argv: string[]) {
     };
     const workbookReader = new Excel.stream.xlsx.WorkbookReader(fileName, options)
     for await (const worksheetReader of workbookReader) {
-      const groupedRows: GroupedRows = new GroupedRows()
+      const groupedRows: GroupedRows = new GroupedRows(get10MinTimeGroupKey)
       for await (const rawRow of worksheetReader) {
         if (rawRow.number >= START_ROW) {
           const row = toDateRow(rawRow)
@@ -36,7 +36,7 @@ export default function avgFile(argv: string[]) {
         }
       }
       console.log(`Finished, calculating and writing AVGs...`)
-      const avgResults = calculateAvg(groupedRows)
+      const avgResults = aggregateCols(groupedRows)
       writeAvgs(avgResults, `${filePath.dir}/${filePath.name}_avg10min${filePath.ext}`)
     }
   }
