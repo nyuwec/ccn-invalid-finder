@@ -3,7 +3,7 @@ import * as path from 'path'
 import { GroupedRows, toDateRow, aggregateCols, writeAvgs, get1MinTimeGroupKey, get10MinTimeGroupKey, AggregateSetup, sumValues, avgValues, AggregateFunction, NotANumberError } from './models/aggregation'
 
 export default function avgFile1min(argv: string[]) {
-  const START_ROW = 3
+  const START_ROW = 2
   const fileName = argv[2]
 
   if (fileName == null) {
@@ -39,9 +39,13 @@ export default function avgFile1min(argv: string[]) {
           }
         }
       }
-      //console.log(groupedRows)
       console.log(`Finished, calculating and writing AVGs...`)
-      const agrSetup: AggregateFunction[] = [avgValues, sumValues, sumValues]
+      const agrSetup: AggregateFunction[] = [
+        avgValues, sumValues, sumValues, avgValues, avgValues, avgValues,
+        sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues,
+        sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues,
+        sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues, sumValues
+      ]
 
       const avgResults = aggregateCols(groupedRows, agrSetup)
       writeAvgs(avgResults,

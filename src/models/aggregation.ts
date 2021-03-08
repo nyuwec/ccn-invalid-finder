@@ -1,6 +1,7 @@
 import { MMap } from './MMap'
 import * as moment from 'moment'
 import * as Excel from 'exceljs'
+import { extractNumber, toMoment } from '../utils/excel'
 
 
 export const START_ROW = 5
@@ -48,10 +49,19 @@ export function get1MinTimeGroupKey(momentVal: moment.Moment): string {
 
 export class AggregateResults extends MMap<string, Array<number>> {}
 
-// EXCEL PARSING UTILITIES
+class NotADateError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = this.constructor.name
+  }
+}
+
 export function toDateRow(rawRow: Excel.Row, dateColPos: number = 1, fallback: boolean = true): DateRow {
   const cell = rawRow.getCell(dateColPos)
   const date: moment.Moment = toMoment(cell)
+  if (!date.isValid()) {
+    throw new NotADateError(`Invalid date at row #${rawRow.number}, cell: ${cell}`)
+  }
   // console.log(`dateCell: ${cell}, type: ${cell.type}, parsed: ${date}`)
 
   const vals: number[] = Array<number>()
@@ -62,53 +72,6 @@ export function toDateRow(rawRow: Excel.Row, dateColPos: number = 1, fallback: b
     date: date,
     vals: vals
   }
-}
-
-export function toMoment(dateCell: Excel.Cell): moment.Moment {
-  const dateNum = extractNumber(dateCell)
-  if (dateNum == 0) {
-    return moment.utc(dateCell.value as string, "YYYY.MM.DD hh:mm:ss")
-  } else {
-    return excelDate2Date(dateNum)
-  }
-}
-
-class NotANumberError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = this.constructor.name
-  }
-}
-
-export function extractNumber(cell: Excel.Cell, fallback: boolean = true): number {
-  function parseFloatFB(val: string) {
-    const result = parseFloat(val)
-    if (isNaN(result)) {
-      if (fallback) {
-        return 0
-      } else {
-        throw new NotANumberError(`wrong number: ${val}`)
-      }
-    }
-    return result
-  }
-
-  switch (cell.type) {
-    case Excel.ValueType.Formula:
-      const value = cell.value as Excel.CellFormulaValue
-      return parseFloatFB(value.result as string)
-    case Excel.ValueType.String:
-      return parseFloatFB(eval(cell.value as string)['result'])
-    case Excel.ValueType.Number:
-      return parseFloatFB(cell.value as string)
-    default:
-      console.log(`Unknown cell.type: ${cell.type} val: ${cell.value}, row: ${cell.row}, col: ${cell.col}`)
-      return parseFloatFB(cell.value as string)
-  }
-}
-
-export function excelDate2Date(excelDate: number): moment.Moment {
-  return moment.utc((excelDate - (25567 + 2))*86400*1000)
 }
 
 export type AggregateFunction = (vals: number[]) => number
