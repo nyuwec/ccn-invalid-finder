@@ -1,6 +1,6 @@
-import avgFile from './avg'
+import avg10mFile from './avg'
 import avgFile1min from './avg1min'
-import avgFolder from './avg_folder'
+import avg10mFolder from './avg_folder'
 import finder from './finder'
 import sliceFile from './slice_file'
 
@@ -21,13 +21,13 @@ console.log(`-=- Running ${command.toUpperCase()} -=-`)
 
 switch (command) {
   case 'avg10m':
-    avgFile(argv)
+    avg10mFile(argv)
     break
   case 'avg1m':
     avgFile1min(argv)
     break
   case 'avg10m-folder':
-    avgFolder(argv)
+    avg10mFolder(argv)
     break
   case 'finder':
     finder(argv)
