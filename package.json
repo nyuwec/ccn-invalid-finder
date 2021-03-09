@@ -1,6 +1,6 @@
 {
   "name": "ccn-toolset",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CCN file tools",
   "main": "first.js",
   "bin": "dist/bin.js",

@@ -11,7 +11,7 @@ const command = process.argv[2]
 if (command == null || AvailCommands.includes(command) == false) {
   console.error("ERR: Please define the command you want to execute. Available commands:")
   AvailCommands.forEach(cmd => console.error(`\t- ${cmd}`))
-  console.error(`EXAMPLE: ./${process.env.npm_package_name} avg /path/to/file`)
+  console.error(`EXAMPLE: ${process.title} avg10m /path/to/file`)
   process.exit(9)
 }
 

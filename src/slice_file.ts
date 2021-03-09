@@ -15,7 +15,7 @@ export default function sliceFile(argv: string[]) {
     console.error("\t- path to file")
     console.error("\t- header size in number of lines")
     console.error("\t- size of one chunk in number of lines")
-    console.error(`EXAMPLE: ./${process.env.npm_package_name} slice-file /path/to/file 14 100000`)
+    console.error(`EXAMPLE: ${process.title} slice-file /path/to/file 14 100000`)
     process.exit(0)
   }
 

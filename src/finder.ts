@@ -8,7 +8,7 @@ export default function finder(argv: string[]) {
   if (dirname == null) {
     console.error("ERR: Please define all the params:")
     console.error("\t- path to folder")
-    console.error(`EXAMPLE: ./${process.env.npm_package_name} finder /path/to/`)
+    console.error(`EXAMPLE: ${process.title} finder /path/to/`)
     process.exit(0)
   }
 

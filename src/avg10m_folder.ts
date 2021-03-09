@@ -11,7 +11,7 @@ export default function avgFolder10m(argv: string[]) {
   if (paramFolderName == null) {
     console.error("ERR: Please define all the params:")
     console.error("\t- path to folder")
-    console.error(`EXAMPLE: ./${process.env.npm_package_name} avg-folder /path/to/`)
+    console.error(`EXAMPLE: ${process.title} avg10m-folder /path/to/`)
     process.exit(0)
   }
 

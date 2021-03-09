@@ -9,7 +9,7 @@ export default function avgFile1min(argv: string[]) {
   if (fileName == null) {
     console.error("ERR: Please define all the params:")
     console.error("\t- path to file")
-    console.error(`EXAMPLE: ./${process.env.npm_package_name} avg1min /path/to/file`)
+    console.error(`EXAMPLE: ${process.title} avg1m /path/to/file`)
     process.exit(0)
   }
 
