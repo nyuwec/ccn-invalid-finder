@@ -9,9 +9,9 @@
     "build-watch": "tsc --watch",
     "bin": "node --max-old-space-size=4096 dist/bin.js",
     "finder": "node dist/bin.js finder",
-    "avg": "node --max-old-space-size=4096 dist/bin.js avg",
-    "avg1min": "node --max-old-space-size=4096 dist/bin.js avg1min",
-    "avg-folder": "node --max-old-space-size=8192 dist/bin.js avg-folder",
+    "avg10m": "node --max-old-space-size=4096 dist/bin.js avg10m",
+    "avg1m": "node --max-old-space-size=4096 dist/bin.js avg1m",
+    "avg10m-folder": "node --max-old-space-size=8192 dist/bin.js avg10m-folder",
     "slice-file": "node dist/bin.js slice-file",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -2,7 +2,7 @@ import * as Excel from 'exceljs'
 import * as path from 'path'
 import { START_ROW, GroupedRows, toDateRow, aggregateCols, writeAvgs, get10MinTimeGroupKey } from './models/aggregation'
 
-export default function avgFile(argv: string[]) {
+export default function avg10mFile(argv: string[]) {
 
   const fileName = argv[2]
 

@@ -4,7 +4,7 @@ import avgFolder from './avg_folder'
 import finder from './finder'
 import sliceFile from './slice_file'
 
-const AvailCommands = ['avg', 'avg1min', 'avg-folder', 'finder', 'slice-file']
+const AvailCommands = ['avg10m', 'avg1m', 'avg10m-folder', 'finder', 'slice-file']
 
 const command = process.argv[2]
 
@@ -20,13 +20,13 @@ const argv = [process.argv[0], process.argv[1], ...process.argv.slice(3)]
 console.log(`-=- Running ${command.toUpperCase()} -=-`)
 
 switch (command) {
-  case 'avg':
+  case 'avg10m':
     avgFile(argv)
     break
-  case 'avg1min':
+  case 'avg1m':
     avgFile1min(argv)
     break
-  case 'avg-folder':
+  case 'avg10m-folder':
     avgFolder(argv)
     break
   case 'finder':

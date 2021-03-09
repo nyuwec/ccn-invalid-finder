@@ -4,7 +4,7 @@ import * as Excel from 'exceljs'
 import * as moment from 'moment'
 import { DateRow, GroupedRows, aggregateCols, writeAvgs, extractNumber, toMoment, get10MinTimeGroupKey } from './models/aggregation'
 
-export default function avgFolder(argv: string[]) {
+export default function avg10mFolder(argv: string[]) {
   const paramFolderName = argv[2]
 
   if (paramFolderName == null) {
