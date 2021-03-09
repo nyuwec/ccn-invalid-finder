@@ -1,6 +1,6 @@
-import avg10mFile from './avg'
+import avg10mFile from './avg10m'
 import avgFile1min from './avg1min'
-import avg10mFolder from './avg_folder'
+import avg10mFolder from './avg10m_folder'
 import finder from './finder'
 import sliceFile from './slice_file'
 
