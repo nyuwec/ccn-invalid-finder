@@ -45,5 +45,5 @@ export function extractNumber(cell: Excel.Cell, fallback: boolean = true): numbe
 }
 
 export function excelDate2Date(excelDate: number): moment.Moment {
-  return moment.utc((excelDate - (25567 + 2))*86400*1000)
+  return moment.utc(Math.round((excelDate - 25569.0)*86400000.0))
 }

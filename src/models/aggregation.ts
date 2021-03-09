@@ -59,10 +59,10 @@ class NotADateError extends Error {
 export function toDateRow(rawRow: Excel.Row, dateColPos: number = 1, fallback: boolean = true): DateRow {
   const cell = rawRow.getCell(dateColPos)
   const date: moment.Moment = toMoment(cell)
+  // console.log(`row#${rawRow.number}: DATECELL: ${cell}, type: ${cell.type}, parseddate: ${date}`)
   if (!date.isValid()) {
     throw new NotADateError(`Invalid date at row #${rawRow.number}, cell: ${cell}`)
   }
-  // console.log(`dateCell: ${cell}, type: ${cell.type}, parsed: ${date}`)
 
   const vals: number[] = Array<number>()
   for (let i=dateColPos+1;i<=rawRow.cellCount;i++) {
