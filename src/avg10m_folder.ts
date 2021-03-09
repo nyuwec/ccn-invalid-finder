@@ -2,7 +2,8 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as Excel from 'exceljs'
 import * as moment from 'moment'
-import { DateRow, GroupedRows, aggregateCols, writeAvgs, extractNumber, toMoment, get10MinTimeGroupKey } from './models/aggregation'
+import { DateRow, GroupedRows, aggregateCols, writeAvgs, get10MinTimeGroupKey } from './models/aggregation'
+import { extractNumber, toMoment } from './utils/excel'
 
 export default function avg10mFolder(argv: string[]) {
   const paramFolderName = argv[2]

@@ -1,6 +1,6 @@
 import * as Excel from 'exceljs'
 import * as path from 'path'
-import { GroupedRows, toDateRow, aggregateCols, writeAvgs, get1MinTimeGroupKey, get10MinTimeGroupKey, AggregateSetup, sumValues, avgValues, AggregateFunction, NotANumberError } from './models/aggregation'
+import { GroupedRows, toDateRow, aggregateCols, writeAvgs, get1MinTimeGroupKey, sumValues, avgValues, AggregateFunction } from './models/aggregation'
 
 export default function avgFile1min(argv: string[]) {
   const START_ROW = 2
